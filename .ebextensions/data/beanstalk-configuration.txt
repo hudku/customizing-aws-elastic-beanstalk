@@ -1,0 +1,98 @@
+[
+    {
+        "Namespace": "aws:autoscaling:launchconfiguration", 
+        "OptionName": "InstanceType", 
+        "ResourceName": null, 
+        "Value": "t1.micro"
+    }, 
+    {
+        "Namespace": "aws:autoscaling:launchconfiguration", 
+        "OptionName": "SecurityGroups", 
+        "ResourceName": "AWSEBAutoScalingLaunchConfiguration", 
+        "Value": "ec2-mySecgroup"
+    }, 
+    {
+        "Namespace": "aws:autoscaling:launchconfiguration", 
+        "OptionName": "EC2KeyName", 
+        "ResourceName": "AWSEBAutoScalingLaunchConfiguration", 
+        "Value": "myKeyPairName"
+    }, 
+    {
+        "Namespace": "aws:elasticbeanstalk:application:environment",
+        "OptionName": "AWS_ACCESS_KEY_ID",
+        "ResourceName": null,
+        "Value": "AWS_ACCESS_KEY_ID"
+    },
+    {
+        "Namespace": "aws:elasticbeanstalk:application:environment",
+        "OptionName": "AWS_SECRET_KEY",
+        "ResourceName": null,
+        "Value": "AWS_SECRET_KEY"
+    },
+    {
+        "Namespace": "aws:elasticbeanstalk:hostmanager", 
+        "OptionName": "LogPublicationControl", 
+        "ResourceName": null, 
+        "Value": "false"
+    }, 
+    {
+        "Namespace": "aws:elb:loadbalancer", 
+        "OptionName": "LoadBalancerHTTPSPort", 
+        "ResourceName": "AWSEBLoadBalancer", 
+        "Value": "OFF"
+    }, 
+    {
+        "Namespace": "aws:elb:loadbalancer", 
+        "OptionName": "SSLCertificateId", 
+        "ResourceName": "AWSEBLoadBalancer", 
+        "Value": null
+    }, 
+    {
+        "Namespace": "aws:elb:policies", 
+        "OptionName": "Stickiness Policy", 
+        "ResourceName": "AWSEBLoadBalancer", 
+        "Value": "true"
+    }, 
+    {
+        "Namespace": "aws:elb:policies", 
+        "OptionName": "Stickiness Cookie Expiration", 
+        "ResourceName": "AWSEBLoadBalancer", 
+        "Value": "1800"
+    }, 
+    {
+        "Namespace": "aws:elb:healthcheck", 
+        "OptionName": "Interval", 
+        "ResourceName": "AWSEBLoadBalancer", 
+        "Value": "30"
+    }, 
+    {
+        "Namespace": "aws:elb:healthcheck", 
+        "OptionName": "Timeout", 
+        "ResourceName": "AWSEBLoadBalancer", 
+        "Value": "5"
+    }, 
+    {
+        "Namespace": "aws:elasticbeanstalk:application", 
+        "OptionName": "Application Healthcheck URL", 
+        "ResourceName": "AWSEBLoadBalancer", 
+        "Value": "/myHealthCheck.html"
+    }, 
+    {
+        "Namespace": "aws:autoscaling:asg", 
+        "OptionName": "MaxSize", 
+        "ResourceName": "AWSEBAutoScalingGroup", 
+        "Value": "1"
+    }, 
+    {
+        "Namespace": "aws:autoscaling:asg", 
+        "OptionName": "MinSize", 
+        "ResourceName": "AWSEBAutoScalingGroup", 
+        "Value": "1"
+    }, 
+    {
+        "Namespace": "aws:elasticbeanstalk:sns:topics", 
+        "OptionName": "Notification Endpoint", 
+        "ResourceName": null, 
+        "Value": "dev-team@myDomain.com"
+    } 
+]

@@ -1,0 +1,47 @@
+#!/bin/bash
+
+# AWS Elastic Beanstalk Application Configuration Settings 
+
+
+# Elasticbeanstalk app main settings to bootstap the deployment
+export ELASTICBEANSTALK_APP_NAME="myApp"
+export ELASTICBEANSTALK_APP_PRIVATE_S3_BUCKET="bucket.private"
+export ELASTICBEANSTALK_APP_DEPLOY_DIR="folders/deployment"
+
+
+#
+# Only the above information is mandatory. Information below has to be present in the file
+#   named .elastic-beanstalk-app contained in the zip file secrets.zip. At the time of
+#   deployment that zip file gets retrieved from S3 and unzipped overwriting any
+#   existing file. Please see the script aws-credentials-setup.sh which does the retrieval.
+#
+
+
+#
+# Below settings are provided for only illustrative purpose.
+#
+
+# Apache settings
+export APACHE_DIR="/var/www/myApacheWebAppDir"
+
+# Tomcat settings
+export TOMCAT_DIR="/usr/share/tomcat7"
+export TOMCAT_PRIMARY_INSTANCE_NAME="tomcat7"
+export TOMCAT_SECONDARY_INSTANCE_NAME=
+
+# AWS credentials
+export AWS_CREDENTIAL_FILE="/root/.aws-credentials"
+export AWS_ACCOUNT_KEY_NAME="myKeyName used in file .aws-secrets"
+
+# RDS settings
+export RDS_INSTANCE_NAME="myRDSInstaceName"
+
+# Route53 Zone and ResourceRecord settings
+export ROUTE53_ZONE_NAME="myDomainName.com."
+export ROUTE53_RR_PRODUCTION_NAME="${ELASTICBEANSTALK_APP_NAME}_prod.$ROUTE53_ZONE_NAME"
+export ROUTE53_RR_STAGING_NAME="${ELASTICBEANSTALK_APP_NAME}_staging.$ROUTE53_ZONE_NAME"
+export ROUTE53_RR_DEVELOPMENT_NAME="${ELASTICBEANSTALK_APP_NAME}_dev.$ROUTE53_ZONE_NAME"
+
+# Git settings
+export GIT_USER_NAME="myGitUserName"
+export GIT_PASSWORD="myGitPassword"
