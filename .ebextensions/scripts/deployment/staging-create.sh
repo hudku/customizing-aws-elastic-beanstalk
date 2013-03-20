@@ -6,6 +6,11 @@
 # Set value to 3,4,5 and so on to increase the nesting level of the scripts to be debugged.
 [[ $DEBUG -gt 0 ]] && set -x; export DEBUG=$(($DEBUG - 1))
 
+#
+# Creates a new Elastic Beanstalk Staging environment
+#
+
+
 
 # include all the utility scripts
 source $ELASTICBEANSTALK_APP_SCRIPT_DIR/include/include.sh
@@ -30,7 +35,7 @@ envCNAME="${ELASTICBEANSTALK_APP_NAME}_staging"
 # If parameter is supplied then alter the default values
 if ([ ! -z "$1" ]) then
     fileBeanstalkConfig=$1
-    envCNAME="${ELASTICBEANSTALK_APP_NAME}_dev"
+    envCNAME="${ELASTICBEANSTALK_APP_NAME}-dev"
 fi
 
 # Check if the beanstalk configuration file exists

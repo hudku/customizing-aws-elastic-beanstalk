@@ -11,7 +11,11 @@
 #
 
 
+tomcatPrimaryInstanceName="$TOMCAT_PRIMARY_INSTANCE_NAME"
 tomcatSecondaryInstanceName="$TOMCAT_SECONDARY_INSTANCE_NAME"
+
+tomcatPrimaryInstanceDir="/usr/share/$tomcatPrimaryInstanceName"
+tomcatSecondaryInstanceDir="/usr/share/$tomcatSecondaryInstanceName"
 
 
 

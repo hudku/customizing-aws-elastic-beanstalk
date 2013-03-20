@@ -20,7 +20,7 @@ fi
 
 
 # Alter apache and tomcat configuration files for the current EC2 instance type
-if [ "$EC2_INSTANCE_TYPE" == "t1.micro" ]; then
+if ([ "$EC2_INSTANCE_TYPE" == "t1.micro" ]) then
     
     if ([ -f /etc/tomcat7/server.xml ]) then
         sed -i 's|\(AJP/1\.3.*\)minSpareThreads=.*maxThreads="[^"]*"|\1|' /etc/tomcat7/server.xml
