@@ -6,10 +6,10 @@
 # Set value to 3,4,5 and so on to increase the nesting level of the scripts to be debugged.
 [[ $DEBUG -gt 0 ]] && set -x; export DEBUG=$(($DEBUG - 1))
 
+
 #
 # Creates a new Elastic Beanstalk Staging environment
 #
-
 
 
 # include all the utility scripts
