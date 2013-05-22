@@ -52,6 +52,7 @@ optionsDNSCurl="-- -s -H \"Content-Type: text/xml; charset=UTF-8\""
 
 # Route53 API settings
 urlRoute53API="https://route53.amazonaws.com/2012-02-29"
+urlRoute53APIDoc="https://route53.amazonaws.com/doc/2012-02-29/"
 
 
 # Get Route53 HostedZoneId
