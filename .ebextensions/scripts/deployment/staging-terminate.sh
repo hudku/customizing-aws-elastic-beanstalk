@@ -47,16 +47,13 @@ dnsEntryName=$stagingDNSEntryName
 hostName=$(echo $dnsEntryName | grep -o "[^\.]*\.[^\.]*\.$")
 
 
-# dnscurl common options
-optionsDNSCurl="-- -s -H \"Content-Type: text/xml; charset=UTF-8\""
-
 # Route53 API settings
-urlRoute53API="https://route53.amazonaws.com/2012-02-29"
-urlRoute53APIDoc="https://route53.amazonaws.com/doc/2012-02-29/"
+urlRoute53API="https://route53.amazonaws.com/2012-12-12"
+urlRoute53APIDoc="https://route53.amazonaws.com/doc/2012-12-12/"
 
 
 # Get Route53 HostedZoneId
-allHostedZones=$(dnscurl.pl --keyname $awsAccountKeyName $optionsDNSCurl -X GET $urlRoute53API/hostedzone 2>/dev/null)
+allHostedZones=$(dnscurl.pl --keyname $awsAccountKeyName -- -s -H "Content-Type: text/xml; charset=UTF-8" -X GET $urlRoute53API/hostedzone 2>/dev/null)
 hostNameSearch="ListHostedZonesResponse/HostedZones/HostedZone[Name=\"$hostName\"]/Id"
 hostedZoneId=$(echo $allHostedZones | xpath $hostNameSearch 2>/dev/null | awk -F'[<|>]' '/Id/{print $3}' | cut -d/ -f3)
 if ([ -z $hostedZoneId ]) then
@@ -65,11 +62,16 @@ if ([ -z $hostedZoneId ]) then
 fi
 
 # Obtain all the resource record sets for the hosted zone id
-allRecords=$(dnscurl.pl --keyname $awsAccountKeyName $optionsDNSCurl -X GET $urlRoute53API/hostedzone/$hostedZoneId/rrset 2>/dev/null)
+allRecords=$(dnscurl.pl --keyname $awsAccountKeyName -- -s -H "Content-Type: text/xml; charset=UTF-8" -X GET $urlRoute53API/hostedzone/$hostedZoneId/rrset 2>/dev/null)
 
 # Obtain the DNS record
 dnsRecordSearch="ListResourceRecordSetsResponse/ResourceRecordSets/ResourceRecordSet[Name=\"$dnsEntryName\"]"
 dnsRecord=$(echo $allRecords | xpath $dnsRecordSearch 2>/dev/null)
+if ([ -z $dnsRecord ]) then
+    echo "Error: Failed to obtain DNS Record from Route53. HostedZoneId: '$hostName' DNSEntryName: '$dnsEntryName'"
+    exit 1
+fi
+
 
 # Get ec2 CNAME record
 dnsEC2RecordSearch="ListResourceRecordSetsResponse/ResourceRecordSets/ResourceRecordSet[Name=\"ec2.$dnsEntryName\"]"
@@ -105,12 +107,19 @@ echo "Terminating the environment $envName"
 elastic-beanstalk-terminate-environment -e $envName
 
 
-dnsRecord=$(echo "<Change><Action>DELETE</Action>$dnsRecord</Change>")
-dnsEC2Record=$(echo "<Change><Action>DELETE</Action>$dnsEC2Record</Change>")
+if ([ ! -z $dnsRecord ]) then
+    dnsRecord=$(echo "<Change><Action>DELETE</Action>$dnsRecord</Change>")
+fi
+
+if ([ ! -z $dnsEC2Record ]) then
+	dnsEC2Record=$(echo "<Change><Action>DELETE</Action>$dnsEC2Record</Change>")
+fi
 
 # check if www prefix also has to be processed
 if ([ ! -z $prefixName ]) then
-    dnsPrefixRecord=$(echo $dnsRecord | sed "s|<Name>$dnsEntryName</Name>|<Name>www.$dnsEntryName</Name>|g")
+	if ([ ! -z $dnsRecord ]) then
+        dnsPrefixRecord=$(echo $dnsRecord | sed "s|<Name>$dnsEntryName</Name>|<Name>www.$dnsEntryName</Name>|g")
+    fi
 fi
 
 
@@ -137,7 +146,7 @@ cat <<ROUTE53-XML > $xmlTmp
 ROUTE53-XML
 
 # POST the XML containing Route53 actions
-route53Response=$(dnscurl.pl --keyname $awsAccountKeyName $optionsDNSCurl -X POST --upload-file $xmlTmp $urlRoute53API/hostedzone/$hostedZoneId/rrset 2>/dev/null)
+route53Response=$(dnscurl.pl --keyname $awsAccountKeyName -- -s -H "Content-Type: text/xml; charset=UTF-8" -X POST --upload-file $xmlTmp $urlRoute53API/hostedzone/$hostedZoneId/rrset 2>/dev/null)
 
 # Delete the temporary XML file
 rm -f $xmlTmp
