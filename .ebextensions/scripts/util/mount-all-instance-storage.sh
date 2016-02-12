@@ -14,7 +14,7 @@
 
 memorySizeInMB=$(free -m | grep "Mem:" | awk '{print $2}')
 
-swapFileSizeInGB=1
+swapFileSizeInGB=2
 if ([ $memorySizeInMB -lt 2048 ]) then
     swapFileSizeInGB=2
 fi

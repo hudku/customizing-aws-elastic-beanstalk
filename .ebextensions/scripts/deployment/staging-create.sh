@@ -118,4 +118,5 @@ if ([ ! -z "$ipCNAME" ]) then
 fi
 
 # Launch the new environment
-elastic-beanstalk-create-environment -a $ELASTICBEANSTALK_APP_NAME -l lbl_${appNewVersionFileName} -e env-${envDateTime} -s "64bit Amazon Linux running Tomcat 7" -f $fileBeanstalkConfig $sCNAMEOption
+solutionStackName="64bit Amazon Linux 2014.03 v1.1.0 running Tomcat 7 Java 7"
+elastic-beanstalk-create-environment -a $ELASTICBEANSTALK_APP_NAME -l lbl_${appNewVersionFileName} -e env-${envDateTime} -s "$solutionStackName" -f $fileBeanstalkConfig $sCNAMEOption

@@ -15,19 +15,8 @@ fi
 
 
 export AWS_ELASTIC_BEANSTALK_HOME=/opt/aws/AWS-ElasticBeanstalk-CLI-2.2
-export AWS_CLOUDFORMATION_HOME=/opt/aws/AWSCloudFormation-1.0.12
-export AWS_SNS_HOME=/opt/aws/SimpleNotificationServiceCli-1.0.3.3
-
 if [ -e $AWS_ELASTIC_BEANSTALK_HOME ]; then
     export PATH=$PATH:$AWS_ELASTIC_BEANSTALK_HOME/api/bin
-fi
-
-if [ -e $AWS_CLOUDFORMATION_HOME ]; then
-    export PATH=$PATH:$AWS_CLOUDFORMATION_HOME/bin
-fi
-
-if [ -e $AWS_SNS_HOME ]; then
-    export PATH=$PATH:$AWS_SNS_HOME/bin
 fi
 
 

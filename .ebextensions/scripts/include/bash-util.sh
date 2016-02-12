@@ -94,7 +94,7 @@ function getIPOfURL()
 # Usage: getProcessPID processName
 function getProcessPID()
 {
-    echo $(ps -ef | grep "$1" | head -1 | grep -v grep | awk '{print $2}')
+    echo $(ps -ef | grep "$1" | grep -v grep | head -1 | awk '{print $2}')
 }
 
 # Usage: isProcessRunning processName
@@ -115,6 +115,37 @@ function isPortOpen()
     [ ! -z "$result" ]
 }
 
+# Usage: isSameURL URL1 URL2
+function isSameURL()
+{
+    local ip1
+    local bResult
+    
+    ip1=$(getIPOfURL $1)
+    bResult=$(isSameURLAndIP $2 $ip1)
+    
+    if ([ -z "$bResult" ]) then
+        local ip2
+        
+        ip2=$(getIPOfURL $2)
+        bResult=$(isSameURLAndIP $1 $ip2)
+    fi
+    
+    if ([ ! -z "$bResult" ]) then
+        echo -e "true"
+    fi
+}
+
+# Usage: isSameURLAndIP URL IP
+function isSameURLAndIP()
+{
+    local result
+    
+    result=$(dig $1 +short | grep $2)
+    if ([ ! -z "$result" ]) then
+        echo -e "true"
+    fi
+}
 
 
 # Usage: Prompt user making it easy to say no

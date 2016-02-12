@@ -61,6 +61,13 @@ export ELASTICBEANSTALK_APP_SCRIPT_DIR="$ELASTICBEANSTALK_APP_EXT_DIR/scripts"
 
 
 # EC2 environment variables
+unset EC2_REGION
+unset EC2_ZONE
+unset EC2_URL
+unset EC2_INSTANCE_ID
+unset EC2_INSTANCE_TYPE
+unset EC2_INSTANCE_URL
+
 EC2_ZONE=$(/opt/aws/bin/ec2-metadata -z | grep placement: | awk '{print $2}')
 
 if ([ -f /etc/elasticbeanstalk/.aws-eb-stack.properties ]) then
@@ -73,6 +80,7 @@ EC2_URL=https://$(/opt/aws/bin/ec2-describe-regions $EC2_REGION | grep $EC2_REGI
 EC2_INSTANCE_ID=$(/opt/aws/bin/ec2-metadata -i | grep instance-id: | awk '{print $2}')
 EC2_INSTANCE_TYPE=$(/opt/aws/bin/ec2-metadata -t | grep instance-type: | awk '{print $2}')
 EC2_INSTANCE_URL=$(/opt/aws/bin/ec2-metadata -p | grep public-hostname: | awk '{print $2}')
+
 export EC2_REGION
 export EC2_ZONE
 export EC2_URL
@@ -87,6 +95,11 @@ export AWS_REGION
 
 
 # ELB environment variables
+unset ELB_NAME
+unset ELB_HOSTEDZONE_NAME
+unset ELB_HOSTEDZONE_ID
+unset ELB_URL
+
 allRecords=$(/opt/aws/bin/elb-describe-lbs --show-xml)
 
 # Setup XPath query to obtain the ELB record containing the current EC2_INSTANCE_ID
@@ -116,19 +129,24 @@ if ([ -f /root/.elastic-beanstalk-cmd-leader ]) then
 fi
 export ELASTICBEANSTALK_CMD_LEADER=$ELASTICBEANSTALK_CMD_LEADER
 
+unset ELASTICBEANSTALK_URL
+unset ELASTICBEANSTALK_S3_BUCKET
+unset ELASTICBEANSTALK_ENV_ID
+unset ELASTICBEANSTALK_ENV_NAME
+unset ELASTICBEANSTALK_CNAME
 if ([ -f /etc/elasticbeanstalk/.aws-eb-stack.properties ]) then
 	ELASTICBEANSTALK_URL=$(echo $EC2_URL | sed s/ec2\./elasticbeanstalk./)
 	ELASTICBEANSTALK_S3_BUCKET=$(cat /etc/elasticbeanstalk/.aws-eb-stack.properties | grep "environment_bucket=" | cut -d= -f2)
 	ELASTICBEANSTALK_ENV_ID=$(cat /etc/elasticbeanstalk/.aws-eb-stack.properties | grep "environment_id=" | cut -d= -f2)
 	ELASTICBEANSTALK_ENV_NAME=$(/opt/aws/bin/ec2-describe-instances $EC2_INSTANCE_ID | grep "elasticbeanstalk:environment-name" | awk '{print $5}')
-
-    envInfo=$(elastic-beanstalk-describe-environments -e $ELASTICBEANSTALK_ENV_NAME -j)
-    ELASTICBEANSTALK_CNAME=$(echo -e "$envInfo" | grep -ioP "CNAME\":.*?elasticbeanstalk\.com\"" | cut -d, -f1 | cut -d: -f2 | sed s/\"//g)
 fi
 export ELASTICBEANSTALK_URL
 export ELASTICBEANSTALK_S3_BUCKET
 export ELASTICBEANSTALK_ENV_ID
 export ELASTICBEANSTALK_ENV_NAME
+
+envInfo=$(elastic-beanstalk-describe-environments -e $ELASTICBEANSTALK_ENV_NAME -j)
+ELASTICBEANSTALK_CNAME=$(echo -e "$envInfo" | grep -ioP "CNAME\":.*?elasticbeanstalk\.com\"" | cut -d, -f1 | cut -d: -f2 | sed s/\"//g)
 export ELASTICBEANSTALK_CNAME
 
 

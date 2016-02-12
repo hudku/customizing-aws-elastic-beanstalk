@@ -25,6 +25,9 @@ fi
 elbURL=$1
 
 
+# Remove the trailing dot if present
+elbURL=$(echo $elbURL | sed 's/.$//')
+
 # Using the elb URL obtain the beanstalk environment name
 envName=$(elastic-beanstalk-describe-environments -j | grep -io "\"EndpointURL\":\"$elbURL\",\"EnvironmentId\":\"[^\"]*\",\"EnvironmentName\":\"[^\"]*\"" | cut -d, -f3 | cut -d: -f2 | sed s/\"//g)
 

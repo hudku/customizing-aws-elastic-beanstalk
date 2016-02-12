@@ -19,6 +19,14 @@ if ([ -f $ELASTICBEANSTALK_APP_DATA_DIR/beanstalk-configuration.txt ]) then
 fi
 
 
+# Alter tomcat properties file
+if ([ -f /etc/tomcat7/catalina.properties ]) then
+    # Add the line if not already present
+	term="org.apache.tomcat.util.buf.UDecoder.ALLOW_ENCODED_SLASH"
+    grep -q $term /etc/tomcat7/catalina.properties || echo -e "\n\n$term=true\n" >> /etc/tomcat7/catalina.properties
+fi
+
+
 # Alter apache and tomcat configuration files for the current EC2 instance type
 if ([ "$EC2_INSTANCE_TYPE" == "t1.micro" ]) then
     
